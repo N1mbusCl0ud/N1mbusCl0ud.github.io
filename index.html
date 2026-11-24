@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- This tag makes the page fit phone screens properly -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Gelo a.k.a Klowd | IT Graduate</title>
+  <meta name="description" content="Portfolio of Gelo a.k.a Klowd, IT graduate in IT support, networks and databases.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ========== 1. DESIGN TOKENS ==========
+       Change a color here and it updates the whole site. */
+    :root {
+      color-scheme: dark;
+      --bg: #0d1219;          /* page background (deep blue-slate) */
+      --surface: #151c26;     /* slightly lighter panels */
+      --line: #243040;        /* thin borders */
+      --text: #e6ebf2;        /* main text */
+      --muted: #8d9bb0;       /* softer text */
+      --accent: #8fb8ff;      /* sky blue, a nod to "Klowd" */
+      --font-head: "Bricolage Grotesque", system-ui, sans-serif;
+      --font-body: "IBM Plex Sans", system-ui, sans-serif;
+      --max: 1040px;          /* max content width */
+
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; height: 100%; }  /* smooth scrolling + offset for the header */
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--text);
+      font: 400 1.0625rem/1.65 var(--font-body);
+    }
+    a { color: inherit; text-decoration: none; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+    /* Shared layout helper: centers content and adds side space */
+    .wrap { width: min(var(--max), 100% - 2.5rem); margin-inline: auto; }
+    section { padding: 6rem 0; }
+    h2 { font: 700 clamp(1.8rem, 4vw, 2.5rem)/1.15 var(--font-head); margin: 0 0 2.5rem; letter-spacing: -0.02em; }
+
+    /* ========== 2. HEADER / NAV ========== */
+    header {
+      position: sticky; top: 0; z-index: 20;
+      padding-top: env(safe-area-inset-top, 0px);
+      background: rgba(13, 18, 25, 0.85); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .logo { font: 800 1.25rem var(--font-head); }
+    .logo span { color: var(--accent); }
+    nav ul { display: flex; gap: 2rem; list-style: none; margin: 0; padding: 0; }
+    nav a { color: var(--muted); font-size: 0.95rem; padding: 0.4rem 0; border-bottom: 2px solid transparent; transition: color .2s, border-color .2s; }
+    nav a:hover, nav a.active { color: var(--text); border-color: var(--accent); }
+    .menu-btn { display: none; background: none; border: 1px solid var(--line); color: var(--text); border-radius: 8px; padding: 0.45rem 0.8rem; font: inherit; cursor: pointer; }
+
+    /* ========== 3. HERO ========== */
+    .hero { padding: 7rem 0 6rem; position: relative; overflow: hidden; }
+    /* A soft "cloud" glow that follows the mouse (the one special effect on this page) */
+    .glow {
+      position: absolute; width: 520px; height: 520px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(143,184,255,.18), transparent 65%);
+      left: 60%; top: -10%; pointer-events: none; transition: transform .4s ease-out;
+    }
+    .hero p.hi { color: var(--muted); margin: 0 0 1rem; }
+    .hero h1 {
+      font: 800 clamp(3.5rem, 13vw, 9rem)/0.95 var(--font-head);
+      letter-spacing: -0.045em; margin: 0 0 1.5rem;
+    }
+    .hero .aka { color: var(--muted); font-size: clamp(1.1rem, 2.5vw, 1.4rem); margin: 0 0 2.5rem; max-width: 34rem; }
+    .btn {
+      display: inline-block; padding: 0.8rem 1.5rem; border-radius: 999px;
+      border: 1px solid var(--line); font-weight: 500; margin-right: 0.6rem; margin-bottom: 0.6rem;
+      transition: transform .2s, background .2s, border-color .2s, color .2s; cursor: pointer; font-family: inherit; font-size: 1rem; color: var(--text); background: transparent;
+    }
+    .btn:hover { transform: translateY(-3px); border-color: var(--accent); }
+    .btn.primary { background: var(--accent); color: #0d1219; border-color: var(--accent); }
+    .btn.primary:hover { background: #b0cdff; }
+
+    /* ========== 4. ABOUT ========== */
+    .about-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 3.5rem; }
+    .about-grid p { margin: 0 0 1rem; color: var(--muted); max-width: 60ch; }
+    .about-grid p strong { color: var(--text); font-weight: 500; }
+    /* Timeline: this IS a sequence of roles, so a line + dots makes sense */
+    .timeline { list-style: none; margin: 0; padding: 0 0 0 1.5rem; border-left: 1px solid var(--line); }
+    .timeline li { position: relative; padding-bottom: 2rem; }
+    .timeline li::before {
+      content: ""; position: absolute; left: calc(-1.5rem - 5px); top: 0.55rem;
+      width: 9px; height: 9px; border-radius: 50%; background: var(--line); transition: background .2s;
+    }
+    .timeline li:hover::before, .timeline li.now::before { background: var(--accent); }
+    .timeline h3 { font: 700 1.1rem var(--font-head); margin: 0; }
+    .timeline span { color: var(--muted); font-size: 0.95rem; }
+
+    /* ========== 5. SKILLS ========== */
+    .skill-group { display: grid; grid-template-columns: 180px 1fr; gap: 1rem; padding: 1.4rem 0; border-top: 1px solid var(--line); }
+    .skill-group:last-child { border-bottom: 1px solid var(--line); }
+    .skill-group h3 { margin: 0; font: 500 1rem var(--font-body); color: var(--muted); }
+    .chips { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+    .chip { padding: 0.4rem 1rem; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; transition: border-color .2s, transform .2s, color .2s; }
+    .chip:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+    /* ========== 6. PROJECTS ========== */
+    .project {
+      display: grid; grid-template-columns: 1fr 1.3fr; gap: 1.5rem;
+      padding: 2rem 1rem; margin: 0 -1rem; border-top: 1px solid var(--line);
+      border-radius: 12px; transition: background .25s, transform .25s;
+    }
+    .project:hover { background: var(--surface); transform: translateX(8px); }
+    .project h3 { margin: 0; font: 700 1.4rem/1.25 var(--font-head); transition: color .2s; }
+    .project:hover h3 { color: var(--accent); }
+    .project p { margin: 0 0 0.8rem; color: var(--muted); }
+    .tags { color: var(--accent); font-size: 0.9rem; }
+
+    /* ========== 7. CONTACT ========== */
+    .contact-box { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: clamp(1.5rem, 5vw, 3.5rem); }
+    .contact-box > p { color: var(--muted); max-width: 46ch; margin: 0 0 2rem; }
+    form { display: grid; gap: 1rem; max-width: 520px; margin-bottom: 2rem; }
+    label { display: grid; gap: 0.4rem; font-size: 0.95rem; color: var(--muted); }
+    input, textarea {
+      font: inherit; color: var(--text); background: var(--bg);
+      border: 1px solid var(--line); border-radius: 10px; padding: 0.75rem 1rem; transition: border-color .2s;
+    }
+    input:focus, textarea:focus { outline: none; border-color: var(--accent); }
+    .links a { color: var(--muted); margin-right: 1.5rem; border-bottom: 1px solid var(--line); transition: color .2s, border-color .2s; }
+    .links a:hover { color: var(--accent); border-color: var(--accent); }
+    #formNote { color: var(--accent); margin: 0; min-height: 1.5em; }
+
+    footer { padding: 2rem 0 3rem; color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--line); }
+
+    /* ========== 8. MOBILE (screens under 760px wide) ========== */
+    @media (max-width: 760px) {
+      section { padding: 4rem 0; }
+      .menu-btn { display: block; }
+      nav ul {
+        display: none; position: absolute; left: 0; right: 0; top: 100%;
+        flex-direction: column; gap: 0; background: var(--bg); border-bottom: 1px solid var(--line); padding: 0.5rem 1.25rem 1rem;
+      }
+      nav ul.open { display: flex; }
+      nav li a { display: block; padding: 0.8rem 0; }
+      .about-grid, .project, .skill-group { grid-template-columns: 1fr; }
+      .project { margin: 0; padding: 1.5rem 0.5rem; }
+      .project:hover { transform: none; }
+    }
+
+    /* ===== NEW: floating clouds around the name ===== */
+    .name-wrap { position: relative; display: block; width: fit-content; font-size: clamp(3.5rem, 13vw, 9rem); padding: 0.15em 0.6em; margin-bottom: 1.5rem; }
+    .hero .name-wrap h1 { font-size: 1em; margin: 0; }
+    .cloud {
+      position: absolute; line-height: 1; opacity: 0; pointer-events: none; user-select: none;
+      filter: drop-shadow(0 0 0.2em rgba(143,184,255,.35));
+      animation: cloudFloat var(--d, 9s) ease-in-out var(--delay, 0s) infinite; /* each cloud has its own speed and start time */
+    }
+    /* Sizes are in em, so they scale with the name: above 1em = bigger than the word, below = smaller */
+    .c1 { left: -0.45em; top: -0.4em; font-size: 1.5em; --d: 10s; }
+    .c2 { right: -0.45em; bottom: -0.35em; font-size: 1.25em; --d: 12s; --delay: -4s; }
+    .c3 { left: 0.35em; bottom: -0.2em; font-size: 0.45em; --d: 7s; --delay: 1s; }
+    .c4 { right: 0.3em; top: -0.2em; font-size: 0.35em; --d: 8s; --delay: 3s; }
+    .c5 { left: 45%; top: -0.5em; font-size: 0.8em; --d: 11s; --delay: -6s; }
+    .c6 { left: 55%; bottom: -0.3em; font-size: 0.25em; --d: 6s; --delay: 2s; }
+    /* Fade in, drift, fade out, then repeat */
+    @keyframes cloudFloat {
+      0%   { opacity: 0;   transform: translate(-0.25em, 0.1em) scale(0.7); }
+      25%  { opacity: .95; }
+      65%  { opacity: .95; transform: translate(0.15em, -0.15em) scale(1); }
+      100% { opacity: 0;   transform: translate(0.4em, -0.05em) scale(1.15); }
+    }
+
+    /* ===== NEW: profile picture with following eyes ===== */
+    .avatar {
+      width: 48px; height: 48px; border-radius: 50%; overflow: hidden; flex: none; margin-left: 1rem;
+      border: 1px solid var(--line); background: var(--surface);
+      transform-origin: top right; transition: transform .25s, border-color .25s;
+    }
+    .avatar:hover { transform: scale(1.9); border-color: var(--accent); }  /* grows so the eyes are easy to see */
+    .avatar svg { width: 100%; height: 100%; display: block; }
+    .pupil { transition: transform .08s linear; }
+
+    /* ===== NEW: projects carousel ===== */
+    .track {
+      display: flex; gap: 1.25rem; overflow-x: hidden; padding: 0.5rem 0.25rem 1.25rem;
+      scrollbar-width: thin; scrollbar-color: var(--line) transparent;
+    }
+    .card {
+      flex: 0 0 min(380px, 82%); scroll-snap-align: start; display: flex; flex-direction: column;
+      background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
+      transition: transform .25s, border-color .25s;
+    }
+    .card:hover { transform: translateY(-6px); border-color: var(--accent); }
+    .pic { aspect-ratio: 16 / 10; background: #101720; border-bottom: 1px solid var(--line); }
+    .pic svg { width: 100%; height: 100%; display: block; }
+    .desc { padding: 1.2rem 1.3rem 1.4rem; }
+    .desc h3 { margin: 0 0 0.5rem; font: 700 1.25rem/1.25 var(--font-head); }
+    .desc p { margin: 0 0 0.8rem; color: var(--muted); font-size: 1rem; }
+    .ctrl { display: flex; gap: 0.6rem; margin-top: 0.5rem; }
+    .ctrl button {
+      width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--line); background: transparent;
+      color: var(--text); font-size: 1.5rem; line-height: 1; cursor: pointer; transition: border-color .2s, transform .2s, opacity .2s;
+    }
+    .ctrl button:hover:not(:disabled) { border-color: var(--accent); transform: translateY(-2px); }
+    .ctrl button:disabled { opacity: .3; cursor: default; }
+
+    /* ===== NEW: Projects section pins to the screen while page scrolling moves the carousel ===== */
+    #projects { padding: 0; }  /* the script sets this section's height to create the extra scroll distance */
+    .pin {
+      position: sticky; top: calc(64px + env(safe-area-inset-top, 0px));
+      min-height: calc(100vh - 64px - env(safe-area-inset-top, 0px));
+      padding-block: 2.5rem; display: flex; flex-direction: column; justify-content: center;
+    }
+    .pin h2 { margin-bottom: 1.5rem; }
+    .bar { height: 3px; background: var(--line); border-radius: 3px; margin-top: 1.25rem; overflow: hidden; }
+    .bar span { display: block; height: 100%; width: 0; background: var(--accent); }
+    @media (max-height: 720px) { .card { flex-basis: min(300px, 82%); } .pic { aspect-ratio: 16 / 9; } }
+
+    /* ===== NEW: extras ===== */
+    .page-progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: var(--accent); z-index: 30; }  /* page reading progress */
+    .role { margin: 0 0 0.6rem; font-size: clamp(1.1rem, 2.5vw, 1.4rem); }  /* typing line */
+    .caret { display: inline-block; width: 2px; height: 1.1em; background: var(--accent); margin-left: 3px; vertical-align: -0.15em; animation: blink 1s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+    .hero .aka { margin-bottom: 1.5rem; }
+    .status { display: inline-flex; align-items: center; gap: 0.6rem; border: 1px solid var(--line); border-radius: 999px; padding: 0.4rem 1rem; margin: 0 0 1.75rem; color: var(--muted); font-size: 0.95rem; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #7fd3a5; animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(127,211,165,.6); } 100% { box-shadow: 0 0 0 10px rgba(127,211,165,0); } }
+
+    /* Respect people who turn off animations in their device settings */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { transition: none !important; }
+      .cloud { animation: none; opacity: .6; }
+      .dot, .caret { animation: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-progress" id="pageProgress"></div>
+  <!-- ========== HEADER ========== -->
+  <header>
+    <div class="wrap nav">
+      <a href="#home" class="logo">Klowd<span>.</span></a>
+      <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menu">Menu</button>
+      <nav>
+        <ul id="menu">
+          <li><a href="#about">About</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <!-- Profile picture: the eyes follow your cursor while it is over this box (see the JavaScript at the bottom).
+           To use a real photo instead, replace the <svg> with an <img> tag. -->
+      <div class="avatar" id="avatar" role="img" aria-label="Profile picture of Gelo">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <rect width="100" height="100" fill="#1d2a3b"/>
+          <path d="M12 100c2-22 18-30 38-30s36 8 38 30z" fill="#8fb8ff"/>
+          <rect x="42" y="58" width="16" height="16" rx="6" fill="#d9a67e"/>
+          <ellipse cx="28" cy="46" rx="4" ry="6" fill="#e0ab82"/><ellipse cx="72" cy="46" rx="4" ry="6" fill="#e0ab82"/>
+          <ellipse cx="50" cy="44" rx="22" ry="25" fill="#e8b88f"/>
+          <path d="M28 42c-3-22 10-30 23-30s26 8 22 30c-2-9-6-15-12-17-8 5-24 5-33 17z" fill="#2a2018"/>
+          <path d="M33 37q5-3 10-1M57 36q5-2 10 1" stroke="#2a2018" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+          <circle cx="39" cy="46" r="6.5" fill="#fff"/><circle cx="61" cy="46" r="6.5" fill="#fff"/>
+          <circle class="pupil" cx="39" cy="46" r="3" fill="#1b1410"/><circle class="pupil" cx="61" cy="46" r="3" fill="#1b1410"/>
+          <path d="M48 57q2 2 4 0" stroke="#b9805c" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+          <path d="M43 62q7 5 14 0" stroke="#8a4b3a" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ========== HERO ========== -->
+    <section class="hero" id="home">
+      <div class="glow" id="glow"></div>
+      <div class="wrap">
+        <p class="hi">Hi, I’m Gelo, an IT graduate known online as</p>
+        <!-- The six clouds fade in and out around the name. Edit their size and position in the CSS (.c1 to .c6) -->
+        <div class="name-wrap">
+          <span class="cloud c1" aria-hidden="true">☁️</span>
+          <span class="cloud c2" aria-hidden="true">☁️</span>
+          <span class="cloud c3" aria-hidden="true">☁️</span>
+          <span class="cloud c4" aria-hidden="true">☁️</span>
+          <span class="cloud c5" aria-hidden="true">☁️</span>
+          <span class="cloud c6" aria-hidden="true">☁️</span>
+          <h1>Klowd</h1>
+        </div>
+        <p class="role">I work with <span id="typed"></span><span class="caret" aria-hidden="true"></span></p>
+        <p class="aka">I keep systems, networks and databases running, and I’m helping my team roll out SAP Business One.</p>
+        <p class="status"><span class="dot" aria-hidden="true"></span>Currently helping roll out SAP Business One</p><br>
+        <a href="#projects" class="btn primary">See my projects</a>
+        <a href="#contact" class="btn">Get in touch</a>
+      </div>
+    </section>
+
+    <!-- ========== ABOUT ========== -->
+    <section id="about">
+      <div class="wrap">
+        <h2>About me</h2>
+        <div class="about-grid">
+          <div>
+            <p><strong>I’m an IT graduate who learned how businesses run by working inside them.</strong></p>
+            <p>My path began as an intern in the HR Office. After graduating, I worked as a Quality Assurance Generalist and in administration at J&amp;T Express, and I’m now in IT support for networks and databases in the Finance Section.</p>
+            <p>Today I help implement SAP Business One. I’m quick to learn, adaptable and reliable, and I like turning everyday office problems into simple tools.</p>
+          </div>
+
+          <!-- Work history: add or remove <li> items to edit it -->
+          <ol class="timeline" style="list-style:none">
+            <li class="now">
+              <h3>IT Support, Networks and Database</h3>
+              <span>Finance Section · Now · Helping implement SAP Business One</span>
+            </li>
+            <li>
+              <h3>Quality Assurance Generalist and Administrative</h3>
+              <span>J&amp;T Express · After graduation</span>
+            </li>
+            <li>
+              <h3>Administrative Aide (Intern)</h3>
+              <span>HR Office · First role</span>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SKILLS ========== -->
+    <section id="skills">
+      <div class="wrap">
+        <h2>Skills</h2>
+        <div class="skill-group">
+          <h3>Web and databases</h3>
+          <div class="chips">
+            <span class="chip">HTML</span>
+            <span class="chip">SQL</span>
+            <span class="chip">PHP</span>
+            <span class="chip">JavaScript</span>
+            <span class="chip">Database management basics</span>
+            <span class="chip">Queries and reports</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h3>IT support and networks</h3>
+          <div class="chips">
+            <span class="chip">Computer literate</span>
+            <span class="chip">Troubleshooting</span>
+            <span class="chip">Hardware and software support</span>
+            <span class="chip">Network basics (LAN, Wi-Fi)</span>
+            <span class="chip">Help desk ticketing</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h3>Business systems</h3>
+          <div class="chips">
+            <span class="chip">SAP Business One</span>
+            <span class="chip">System implementation support</span>
+            <span class="chip">User training and support</span>
+            <span class="chip">Data entry and validation</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h3>Quality and admin</h3>
+          <div class="chips">
+            <span class="chip">Quality assurance</span>
+            <span class="chip">Testing and checking</span>
+            <span class="chip">Documentation</span>
+            <span class="chip">Records management</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h3>Working style</h3>
+          <div class="chips">
+            <span class="chip">Quick to learn</span>
+            <span class="chip">Adaptable</span>
+            <span class="chip">Reliable</span>
+            <span class="chip">Attention to detail</span>
+            <span class="chip">Problem solving</span>
+            <span class="chip">Teamwork</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== PROJECTS ========== -->
+    <section id="projects">
+      <div class="wrap pin">
+        <h2>Projects</h2>
+
+        <!-- Scroll-driven carousel: the section stays on screen while you scroll, and each scroll moves the cards sideways.
+             When the last project is reached, the page continues down. To add a project, copy one <article class="card"> block.
+             The pictures are simple drawings; swap any <svg> for <img src="your-screenshot.png" alt="..."> to use a real screenshot. -->
+        <div class="track" id="track" aria-label="Projects">
+
+          <article class="card">
+            <div class="pic"><svg viewBox="0 0 320 200" role="img" aria-label="HR dashboard with employee records">
+              <rect x="20" y="20" width="64" height="160" rx="8" fill="#1b2533"/>
+              <rect x="30" y="36" width="44" height="6" rx="3" fill="#8fb8ff"/><rect x="30" y="54" width="36" height="6" rx="3" fill="#243040"/><rect x="30" y="70" width="40" height="6" rx="3" fill="#243040"/>
+              <g fill="#1b2533"><rect x="98" y="20" width="202" height="44" rx="8"/><rect x="98" y="74" width="202" height="44" rx="8"/><rect x="98" y="128" width="202" height="44" rx="8"/></g>
+              <g fill="#8fb8ff"><circle cx="122" cy="42" r="11"/><circle cx="122" cy="96" r="11" opacity=".7"/><circle cx="122" cy="150" r="11" opacity=".45"/></g>
+              <g fill="#243040"><rect x="144" y="34" width="90" height="7" rx="3"/><rect x="144" y="46" width="60" height="6" rx="3"/><rect x="144" y="88" width="80" height="7" rx="3"/><rect x="144" y="100" width="54" height="6" rx="3"/><rect x="144" y="142" width="96" height="7" rx="3"/><rect x="144" y="154" width="50" height="6" rx="3"/></g>
+            </svg></div>
+            <div class="desc">
+              <h3>Human Resource Management System</h3>
+              <p>A system for keeping employee records and HR processes in one place.</p>
+              <span class="tags">PHP · SQL · HTML · JavaScript</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="pic"><svg viewBox="0 0 320 200" role="img" aria-label="Contract document with a signature and stamp">
+              <rect x="80" y="16" width="160" height="170" rx="8" fill="#1b2533" stroke="#243040"/>
+              <rect x="98" y="34" width="80" height="9" rx="4" fill="#8fb8ff"/>
+              <g fill="#243040"><rect x="98" y="58" width="124" height="6" rx="3"/><rect x="98" y="72" width="110" height="6" rx="3"/><rect x="98" y="86" width="124" height="6" rx="3"/><rect x="98" y="100" width="90" height="6" rx="3"/></g>
+              <path d="M100 156c10-18 16 8 24-8s12 6 22-4" stroke="#8fb8ff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+              <circle cx="204" cy="150" r="18" fill="none" stroke="#8fb8ff" stroke-width="2.5" opacity=".7"/><path d="M196 150l6 6 11-12" stroke="#8fb8ff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            </svg></div>
+            <div class="desc">
+              <h3>Job Order Contract Generator</h3>
+              <p>A tool that fills in job order contracts automatically, so they are faster to produce and more consistent.</p>
+              <span class="tags">PHP · SQL · JavaScript</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="pic"><svg viewBox="0 0 320 200" role="img" aria-label="Ticket list with status labels">
+              <rect x="24" y="20" width="272" height="28" rx="8" fill="#8fb8ff" opacity=".85"/>
+              <g fill="#1b2533"><rect x="24" y="58" width="272" height="36" rx="8"/><rect x="24" y="102" width="272" height="36" rx="8"/><rect x="24" y="146" width="272" height="36" rx="8"/></g>
+              <circle cx="44" cy="76" r="6" fill="#e8b86f"/><circle cx="44" cy="120" r="6" fill="#8fb8ff"/><circle cx="44" cy="164" r="6" fill="#7fd3a5"/>
+              <g fill="#243040"><rect x="64" y="70" width="120" height="7" rx="3"/><rect x="64" y="114" width="100" height="7" rx="3"/><rect x="64" y="158" width="130" height="7" rx="3"/><rect x="236" y="68" width="46" height="16" rx="8"/><rect x="236" y="112" width="46" height="16" rx="8"/><rect x="236" y="156" width="46" height="16" rx="8"/></g>
+            </svg></div>
+            <div class="desc">
+              <h3>SAP Business One Ticketing System</h3>
+              <p>A ticketing system for reporting and tracking SAP Business One issues and requests.</p>
+              <span class="tags">Web app · SQL · SAP Business One</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="pic"><svg viewBox="0 0 320 200" role="img" aria-label="Database connected to three workstations">
+              <g stroke="#243040" stroke-width="2"><path d="M160 90V130M160 130H70V150M160 130H250V150M160 130V150"/></g>
+              <path d="M130 40v40c0 8 13 14 30 14s30-6 30-14V40" fill="#1b2533" stroke="#8fb8ff" stroke-width="2"/>
+              <ellipse cx="160" cy="40" rx="30" ry="12" fill="#1b2533" stroke="#8fb8ff" stroke-width="2"/>
+              <path d="M130 60c0 8 13 14 30 14s30-6 30-14" fill="none" stroke="#8fb8ff" stroke-width="2" opacity=".6"/>
+              <g fill="#1b2533" stroke="#243040" stroke-width="2"><rect x="46" y="150" width="48" height="32" rx="5"/><rect x="136" y="150" width="48" height="32" rx="5"/><rect x="226" y="150" width="48" height="32" rx="5"/></g>
+              <g fill="#8fb8ff"><circle cx="70" cy="166" r="4"/><circle cx="160" cy="166" r="4" opacity=".7"/><circle cx="250" cy="166" r="4" opacity=".45"/></g>
+            </svg></div>
+            <div class="desc">
+              <h3>Implementing SAP Business One</h3>
+              <p>Supporting the Finance Section during the SAP Business One rollout, from the database and network side.</p>
+              <span class="tags">SAP Business One · Networks · Databases</span>
+            </div>
+          </article>
+        </div>
+        <div class="ctrl">
+          <button id="prev" aria-label="Previous project">‹</button>
+          <button id="next" aria-label="Next project">›</button>
+        </div>
+        <div class="bar"><span id="barFill"></span></div>
+      </div>
+    </section>
+
+    <!-- ========== CONTACT ========== -->
+    <section id="contact">
+      <div class="wrap">
+        <h2>Contact</h2>
+        <div class="contact-box">
+          <p>Have a role, project or question? Send a message and it will open in your email app.</p>
+
+          <!-- This form doesn't need a server: the JavaScript below builds an email link -->
+          <form id="contactForm">
+            <label>Your name <input type="text" id="name" required autocomplete="name"></label>
+            <label>Message <textarea id="msg" rows="4" required></textarea></label>
+            <div><button class="btn primary" type="submit">Send email</button></div>
+            <p id="formNote" role="status"></p>
+          </form>
+
+          <div class="links">
+            <a href="mailto:gelo@gmail.com">gelo@gmail.com</a>
+            <!-- TODO: replace the "#" below with your real profile links -->
+            <a href="#" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="#" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">© <span id="year"></span> Gelo a.k.a Klowd</div>
+  </footer>
+
+  <script>
+    // ----- Mobile menu: show/hide the links when "Menu" is tapped -----
+    const menuBtn = document.getElementById('menuBtn');
+    const menu = document.getElementById('menu');
+    menuBtn.addEventListener('click', () => {
+      const open = menu.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded', open);
+    });
+    // Close the menu after choosing a link
+    menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      menu.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+    }));
+
+    // ----- Highlight the nav link of the section you are viewing -----
+    const links = document.querySelectorAll('nav a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + entry.target.id));
+        }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    document.querySelectorAll('section[id]').forEach(s => observer.observe(s));
+
+    // ----- Hero glow follows the mouse (skipped on touch screens) -----
+    const glow = document.getElementById('glow');
+    const hero = document.getElementById('home');
+    hero.addEventListener('mousemove', e => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 120;
+      const y = (e.clientY / window.innerHeight - 0.5) * 80;
+      glow.style.transform = `translate(${x}px, ${y}px)`;
+    });
+
+    // ----- Contact form: open the visitor's email app with the message filled in -----
+    document.getElementById('contactForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const msg = document.getElementById('msg').value;
+      const subject = encodeURIComponent('Portfolio message from ' + name);
+      window.location.href = 'mailto:gelo@gmail.com?subject=' + subject + '&body=' + encodeURIComponent(msg);
+      document.getElementById('formNote').textContent = 'Opening your email app…';
+    });
+
+    // ----- Eyes follow the cursor while it is over the profile box -----
+    const avatar = document.getElementById('avatar');
+    const pupils = avatar.querySelectorAll('.pupil');
+    avatar.addEventListener('pointermove', e => {
+      const r = avatar.getBoundingClientRect();
+      // How far the cursor is from the box center, from -1 (left/top) to 1 (right/bottom)
+      const dx = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (r.width / 2)));
+      const dy = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (r.height / 2)));
+      pupils.forEach(p => p.style.transform = `translate(${dx * 3}px, ${dy * 3}px)`);  // move up to 3 units
+    });
+    // Look straight ahead again when the cursor leaves
+    avatar.addEventListener('pointerleave', () => pupils.forEach(p => p.style.transform = 'translate(0, 0)'));
+
+    // ----- Projects: scrolling the page moves the carousel sideways -----
+    const section = document.getElementById('projects');
+    const pin = section.querySelector('.pin');
+    const track = document.getElementById('track');
+    const prev = document.getElementById('prev');
+    const next = document.getElementById('next');
+    const barFill = document.getElementById('barFill');
+    let maxX = 0, extra = 0, ratio = 1, pinTop = 0;
+
+    // Work out how far the cards travel and how much extra page height that needs
+    function measure() {
+      maxX = track.scrollWidth - track.clientWidth;      // total sideways distance
+      extra = Math.max(maxX * 2.2, 300);                  // page distance used up while the cards move
+      ratio = extra / Math.max(maxX, 1);
+      pinTop = parseFloat(getComputedStyle(pin).top) || 0;
+      section.style.height = (pin.offsetHeight + extra) + 'px';
+      update();
+    }
+    // Turn "how far we have scrolled in this section" (0 to 1) into sideways movement
+    function update() {
+      const p = Math.min(1, Math.max(0, (pinTop - section.getBoundingClientRect().top) / extra));
+      track.scrollLeft = p * maxX;
+      barFill.style.width = (p * 100) + '%';
+      prev.disabled = p < 0.01;
+      next.disabled = p > 0.99;
+    }
+    // Arrow buttons scroll the page by the amount that moves the cards one step
+    const step = () => track.querySelector('.card').offsetWidth + 20;  // card width + gap
+    prev.addEventListener('click', () => window.scrollBy({ top: -step() * ratio, behavior: 'smooth' }));
+    next.addEventListener('click', () => window.scrollBy({ top: step() * ratio, behavior: 'smooth' }));
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', measure);
+    window.addEventListener('load', measure);
+    measure();
+
+    // ----- Thin bar at the top that shows how far down the page you are -----
+    const pageProgress = document.getElementById('pageProgress');
+    window.addEventListener('scroll', () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      pageProgress.style.width = (max > 0 ? window.scrollY / max * 100 : 0) + '%';
+    }, { passive: true });
+
+    // ----- Typing effect in the hero: types a word, pauses, deletes it, then the next -----
+    const words = ['IT support', 'networks', 'databases', 'SAP Business One', 'web basics'];
+    const typed = document.getElementById('typed');
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      typed.textContent = 'IT support, networks and databases';  // no animation for people who prefer less motion
+    } else {
+      let w = 0, c = 0, deleting = false;
+      (function tick() {
+        const word = words[w];
+        typed.textContent = word.slice(0, c);
+        if (!deleting && c === word.length) { deleting = true; return setTimeout(tick, 1400); }
+        if (deleting && c === 0) { deleting = false; w = (w + 1) % words.length; }
+        c += deleting ? -1 : 1;
+        setTimeout(tick, deleting ? 40 : 80);
+      })();
+    }
+
+    // ----- Footer year updates itself -----
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
